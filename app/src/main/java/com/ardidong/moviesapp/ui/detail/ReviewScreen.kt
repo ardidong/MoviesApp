@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -17,6 +18,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ardidong.domain.movie.model.MovieReview
+import com.ardidong.moviesapp.R
 import com.ardidong.moviesapp.ui.component.ErrorCard
 import com.ardidong.moviesapp.ui.component.MovieAppBar
 
@@ -26,9 +28,8 @@ fun ReviewScreen(
     movieId: Int,
     detailViewModel: DetailViewModel = hiltViewModel())
 {
-    val hah = 565770
-    LaunchedEffect(hah){
-        detailViewModel.getReview(hah)
+    LaunchedEffect(movieId){
+        detailViewModel.getReview(movieId)
     }
 
     val reviewState = detailViewModel.reviewState.collectAsLazyPagingItems()
@@ -47,7 +48,7 @@ fun ReviewScreenContent(
         topBar = {
             MovieAppBar(
                 modifier = Modifier.shadow(16.dp),
-                title = "Reviews"
+                title = stringResource(id = R.string.title_review)
             ) {
                 onNavBack()
             }
@@ -77,8 +78,8 @@ fun ReviewScreenContent(
                     loadState.append is LoadState.Error -> {
                         item {
                             ErrorCard(
-                                title = "Oops, something wrong",
-                                message = "An error occurred while getting reviews please try again"
+                                title = stringResource(id = R.string.error_title_general),
+                                message = stringResource(id = R.string.error_get_data_review)
                             ) {
                                 retry()
                             }
@@ -88,8 +89,8 @@ fun ReviewScreenContent(
                     loadState.refresh is LoadState.Error -> {
                         item {
                             ErrorCard(
-                                title = "Oops, something wrong",
-                                message = "An error occurred while getting reviews please try again"
+                                title = stringResource(id = R.string.error_title_general),
+                                message = stringResource(id = R.string.error_get_data_review)
                             ) {
                                 retry()
                             }

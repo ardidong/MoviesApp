@@ -10,11 +10,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ardidong.moviesapp.R
 import com.ardidong.moviesapp.ui.UiState
 import com.ardidong.moviesapp.ui.component.ErrorCard
 
@@ -93,8 +95,8 @@ fun HomeScreenContent(
                         loadState.append is LoadState.Error -> {
                             item {
                                 ErrorCard(
-                                    title = "Oops, something wrong",
-                                    message = "An error occurred while getting movies please try again"
+                                    title = stringResource(id = R.string.error_title_general),
+                                    message = stringResource(R.string.error_get_data_movies, )
                                 ) {
                                     retry()
                                 }
@@ -104,8 +106,8 @@ fun HomeScreenContent(
                         loadState.refresh is LoadState.Error -> {
                             item {
                                 ErrorCard(
-                                    title = "Oops, something wrong",
-                                    message = "An error occurred while getting movies please try again"
+                                    title = stringResource(id = R.string.error_title_general),
+                                    message = stringResource(R.string.error_get_data_movies, )
                                 ) {
                                     retry()
                                 }
