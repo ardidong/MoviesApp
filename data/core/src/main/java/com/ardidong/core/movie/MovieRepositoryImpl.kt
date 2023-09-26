@@ -20,7 +20,7 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getMoviesByGenre(genres: List<Int>, page: Int): ResultOf<PagedData<Movie>> {
         val mapper = MovieMapper()
 
-        delay(1500)
+        delay(1000)
 
         return remoteSource.getMoviesByGenres(genres, page).fold(
             success = {

@@ -1,5 +1,6 @@
 package com.ardidong.library.network.di
 
+import com.ardidong.library.BuildConfig
 import com.ardidong.library.network.ApiKeyInterceptor
 import com.ardidong.library.network.NetworkClient
 import com.ardidong.library.network.RetrofitClient
@@ -37,7 +38,10 @@ class NetworkModule {
     ): OkHttpClient = OkHttpClient
         .Builder()
         .addInterceptor(httpLoggingInterceptor)
-        .addInterceptor(apiKeyInterceptor)
+        .apply {
+            if (BuildConfig.BUILD_TYPE.contains("debug", true))
+                this.addInterceptor(apiKeyInterceptor)
+        }
         .build()
 
     @Singleton
