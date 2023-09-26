@@ -20,7 +20,7 @@ import com.ardidong.moviesapp.ui.theme.MoviesAppTheme
 fun MovieAppBar(
     modifier: Modifier = Modifier,
     title: String,
-    onBackNavigation: () -> Unit
+    onBackNavigation: (() -> Unit)? = null
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -28,14 +28,16 @@ fun MovieAppBar(
             containerColor = MaterialTheme.colorScheme.primary
         ),
         navigationIcon = {
-            IconButton(
-                onClick = { onBackNavigation() }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    contentDescription = "TopBar Nav Back"
-                )
+            if (onBackNavigation != null){
+                IconButton(
+                    onClick = { onBackNavigation() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        contentDescription = "TopBar Nav Back"
+                    )
+                }
             }
         },
         title = {
