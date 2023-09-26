@@ -4,7 +4,6 @@ import com.ardidong.core.genre.mapper.GenreMapper
 import com.ardidong.domain.common.ResultOf
 import com.ardidong.domain.genre.GenreRepository
 import com.ardidong.domain.genre.model.Genre
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class GenreRepositoryImpl @Inject constructor(
