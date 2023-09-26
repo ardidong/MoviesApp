@@ -20,12 +20,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.ardidong.moviesapp.R
 import com.ardidong.moviesapp.ui.UiState
 import com.ardidong.moviesapp.ui.component.MovieAppBar
 import com.ardidong.moviesapp.ui.component.YoutubeVideoPlayer
@@ -74,7 +76,7 @@ fun DetailScreenContent(
         topBar = {
             MovieAppBar(
                 modifier = Modifier.shadow(16.dp),
-                title = "Details",
+                title = stringResource(id = R.string.title_details),
                 onBackNavigation = { onNavBack() }
             )
         }
@@ -113,8 +115,8 @@ fun DetailScreenContent(
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
-                        Text(text = "Oops, an error occurred", style = MaterialTheme.typography.titleMedium)
-                        Text(text = "Something wrong happened while trying to get movie details! Please try again", textAlign = TextAlign.Center ,style = MaterialTheme.typography.bodyMedium)
+                        Text(text = stringResource(id = R.string.error_title_general), style = MaterialTheme.typography.titleMedium)
+                        Text(text = stringResource(id = R.string.error_get_data_detail), textAlign = TextAlign.Center ,style = MaterialTheme.typography.bodyMedium)
 
                         Button(
                             modifier = Modifier.padding(top = 8.dp),
@@ -123,7 +125,7 @@ fun DetailScreenContent(
                                 containerColor = MaterialTheme.colorScheme.error
                             )
                         ) {
-                            Text(text = "Retry")
+                            Text(text = stringResource(id = R.string.label_retry))
                         }
                     }
 

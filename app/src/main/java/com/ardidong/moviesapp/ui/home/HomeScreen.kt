@@ -1,22 +1,47 @@
 package com.ardidong.moviesapp.ui.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.ardidong.moviesapp.R
 import com.ardidong.moviesapp.ui.UiState
 import com.ardidong.moviesapp.ui.component.ErrorCard
+import com.ardidong.moviesapp.ui.component.MovieAppBar
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -59,55 +84,73 @@ fun HomeScreenContent(
     val movieData = homeScreenState.movies.collectAsLazyPagingItems()
 
     Scaffold(
-        modifier = modifier
+        modifier = modifier,
+        topBar = {
+            MovieAppBar(title = stringResource(id = R.string.app_name))
+        }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
-
-            GenreTab(
-                genreState = homeScreenState.genreState,
-                selectedGenre = homeScreenState.selectedGenre,
-                onAddGenre = { onAddGenre(it) },
-                onRemoveGenre = { onRemoveGenre(it) }
-            )
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
-            ){
-                items(movieData.itemCount){ index ->
-                    movieData[index]?.let { movie ->
-                        MovieItem(movie = movie){ id -> onMovieClicked(id) }
-                    }
+        Box {
+            val listState = rememberLazyListState()
+            val showScrollTopTopButton by remember {
+                derivedStateOf {
+                    listState.firstVisibleItemIndex > 0
                 }
+            }
 
-                movieData.apply {
-                    when {
-                        loadState.refresh is LoadState.Loading -> {
-                            item { MovieLoading() }
+            Column(modifier = Modifier.padding(paddingValues)) {
+                GenreTab(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    genreState = homeScreenState.genreState,
+                    selectedGenre = homeScreenState.selectedGenre,
+                    onAddGenre = { onAddGenre(it) },
+                    onRemoveGenre = { onRemoveGenre(it) }
+                )
+
+                LazyColumn(
+                    state = listState,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    items(movieData.itemCount) { index ->
+                        movieData[index]?.let { movie ->
+                            MovieItem(movie = movie) { id -> onMovieClicked(id) }
                         }
+                    }
 
-                        loadState.append is LoadState.Loading -> {
-                            item { MovieLoading() }
-                        }
-
-                        loadState.append is LoadState.Error -> {
-                            item {
-                                ErrorCard(
-                                    title = "Oops, something wrong",
-                                    message = "An error occurred while getting movies please try again"
+                    movieData.apply {
+                        when {
+                            loadState.refresh is LoadState.Loading -> {
+                                items(
+                                    count = 3
                                 ) {
-                                    retry()
+                                    MovieLoading()
                                 }
                             }
-                        }
 
-                        loadState.refresh is LoadState.Error -> {
-                            item {
-                                ErrorCard(
-                                    title = "Oops, something wrong",
-                                    message = "An error occurred while getting movies please try again"
-                                ) {
-                                    retry()
+                            loadState.append is LoadState.Loading -> {
+                                item { MovieLoading() }
+                            }
+
+                            loadState.append is LoadState.Error -> {
+                                item {
+                                    ErrorCard(
+                                        title = stringResource(id = R.string.error_title_general),
+                                        message = stringResource(R.string.error_get_data_movies,)
+                                    ) {
+                                        retry()
+                                    }
+                                }
+                            }
+
+                            loadState.refresh is LoadState.Error -> {
+                                item {
+                                    ErrorCard(
+                                        title = stringResource(id = R.string.error_title_general),
+                                        message = stringResource(R.string.error_get_data_movies,)
+                                    ) {
+                                        onDataRetry()
+                                        retry()
+                                    }
                                 }
                             }
                         }
@@ -115,18 +158,56 @@ fun HomeScreenContent(
                 }
             }
 
+            val scope = rememberCoroutineScope()
+            ScrollUpButton(isVisible = showScrollTopTopButton) {
+                scope.launch {
+                    listState.animateScrollToItem(0)
+                }
+            }
         }
     }
 }
 
-//
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Preview
-//@Composable
-//fun HomePreview() {
-//
-//    Scaffold {
-//        HomeScreenContent(modifier = Modifier.padding(it), UiState.Loading, UiState.Loading,{},{})
-//
-//    }
-//}
+@Composable
+fun ScrollUpButton(
+    isVisible: Boolean,
+    onClick: () -> Unit
+) {
+    AnimatedVisibility(visible = isVisible, enter = slideIn(
+        initialOffset = {
+            IntOffset(
+                0,
+                350
+            )
+        }
+    ), exit = slideOut(
+        animationSpec = tween(700),
+        targetOffset = {
+            IntOffset(
+                0, 350
+            )
+        }
+    )) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            FloatingActionButton(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomCenter)
+                    .height(48.dp),
+                containerColor = MaterialTheme.colorScheme.secondary,
+                onClick = {
+                    onClick()
+                }
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Icon( modifier = Modifier.padding(vertical = 2.dp),tint = MaterialTheme.colorScheme.onSecondary ,imageVector = Icons.Filled.KeyboardArrowUp, contentDescription = "up arrow")
+                    Text( modifier = Modifier.padding(vertical = 2.dp), text = "Scroll to top", color = MaterialTheme.colorScheme.onSecondary)
+                }
+            }
+        }
+    }
+}
