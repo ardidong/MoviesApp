@@ -50,7 +50,9 @@ fun DetailScreen(
         modifier = modifier,
         detailState = detailScreenState,
         onReviewClick = {
-            navController.navigate("review/${movieId}")
+            navController.navigate("review/${movieId}"){
+                launchSingleTop = true
+            }
         },
         onNavBack = {
             navController.navigateUp()
