@@ -67,6 +67,7 @@ fun HomeScreen(
             }
         },
         onAddGenre = { homeViewModel.addGenre(it) },
+        onRetryGenre = { homeViewModel.getGenreList() },
         onRemoveGenre = { homeViewModel.removeGenre(it) }
     )
 }
@@ -79,6 +80,7 @@ fun HomeScreenContent(
     onMovieClicked: (Int) -> Unit,
     onDataRetry: () -> Unit,
     onAddGenre: (Int) -> Unit,
+    onRetryGenre: () -> Unit,
     onRemoveGenre: (Int) -> Unit,
 ){
     val movieData = homeScreenState.movies.collectAsLazyPagingItems()
@@ -103,6 +105,7 @@ fun HomeScreenContent(
                     genreState = homeScreenState.genreState,
                     selectedGenre = homeScreenState.selectedGenre,
                     onAddGenre = { onAddGenre(it) },
+                    onRetryGenre = { onRetryGenre() },
                     onRemoveGenre = { onRemoveGenre(it) }
                 )
 
