@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ardidong.domain.common.extension.toDurationString
 import com.ardidong.domain.movie.model.MovieDetail
+import com.ardidong.moviesapp.BuildConfig
 import com.ardidong.moviesapp.ui.shimmerEffect
 
 @Composable
@@ -42,8 +43,8 @@ fun MovieInfo(
                     .shadow(elevation = 16.dp, shape = RoundedCornerShape(32.dp))
                     .clip(shape = RoundedCornerShape(32.dp))
                 ,
-                model = "https://image.tmdb.org/t/p/w500${detail.posterPath}",
-                contentDescription = "",
+                model = "${BuildConfig.IMAGE_BASE_URL}w500${detail.posterPath}",
+                contentDescription = "${detail.title} poster",
             )
 
             Column(

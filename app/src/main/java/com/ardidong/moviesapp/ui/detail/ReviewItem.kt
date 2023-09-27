@@ -25,9 +25,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ardidong.domain.movie.model.MovieReview
+import com.ardidong.moviesapp.BuildConfig
 import com.ardidong.moviesapp.ui.component.ExpandableText
 import com.ardidong.moviesapp.ui.shimmerEffect
-
 
 @Composable
 fun ReviewItem(
@@ -56,8 +56,8 @@ fun ReviewItem(
                                 .size(48.dp)
                                 .clip(CircleShape),
                             contentScale = ContentScale.Crop,
-                            model = "https://image.tmdb.org/t/p/w185${this}",
-                            contentDescription = ""
+                            model = "${BuildConfig.IMAGE_BASE_URL}w185${this}",
+                            contentDescription = "review avatar"
                         )
                     } else {
 

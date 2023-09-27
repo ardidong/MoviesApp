@@ -4,4 +4,5 @@
     <string name="error_get_data_movies">An error occurred while getting movies, please try again</string>
     <string name="error_get_data_detail">An error occurred while getting movie details, please try again</string>
     <string name="error_get_data_review">An error occurred while getting movie review, please try again</string>
+    <string name="empty_review">This movie has no reviews yet</string>
 </resources>
