@@ -1,5 +1,6 @@
 package com.ardidong.moviesapp.ui.home
 
+import android.icu.text.CaseMap.Title
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -27,7 +28,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getGenreList()
-        getMovie()
+        getMovie("", emptyList())
     }
 
     fun getGenreList(){
@@ -44,20 +45,35 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getMovie(title: String = "", ids: List<Int> = _homeState.value.selectedGenre.toList()) {
+    private fun getMovie(
+        title: String,
+        ids: List<Int>
+    ) {
         viewModelScope.launch(Dispatchers.IO){
             updateState {
                 it.copy(
-                    movies = emptyFlow()
+                    movies = emptyFlow(),
                 )
             }
+
             val data = if(title.isBlank())
                 dispatchGetMovies(ids).cachedIn(viewModelScope)
             else
-                dispatchSearchMovie(title, ids)
+                dispatchSearchMovie(title, ids).cachedIn(viewModelScope)
             updateState {
                 it.copy(
-                    movies = data
+                    movies = data,
+                )
+            }
+        }
+    }
+
+    fun searchTitle(title: String){
+        viewModelScope.launch {
+            updateState {
+                getMovie(title = title, ids = it.selectedGenre.toList())
+                it.copy(
+                    titleFilter = title
                 )
             }
         }
@@ -66,7 +82,7 @@ class HomeViewModel @Inject constructor(
     fun addGenre(id: Int){
         updateState {
             val newSet = it.selectedGenre + id
-            getMovie(ids = newSet.toList())
+            getMovie(title = it.titleFilter,ids = newSet.toList())
             it.copy(selectedGenre = newSet )
         }
     }
@@ -74,7 +90,7 @@ class HomeViewModel @Inject constructor(
     fun removeGenre(id: Int){
         updateState {
             val newSet = it.selectedGenre - id
-            getMovie(ids = newSet.toList())
+            getMovie(title = it.titleFilter, ids = newSet.toList())
             it.copy(selectedGenre = newSet )
         }
     }

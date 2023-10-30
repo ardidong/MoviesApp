@@ -10,13 +10,15 @@ import kotlinx.coroutines.flow.emptyFlow
 data class HomeScreenState(
     val genreState: UiState<List<Genre>>,
     val movies: Flow<PagingData<Movie>>,
-    val selectedGenre: Set<Int>
+    val selectedGenre: Set<Int>,
+    val titleFilter: String
 ){
     companion object {
         val EMPTY = HomeScreenState(
             genreState = UiState.Loading,
             movies = emptyFlow(),
-            selectedGenre = setOf()
+            selectedGenre = setOf(),
+            titleFilter = ""
         )
     }
 }

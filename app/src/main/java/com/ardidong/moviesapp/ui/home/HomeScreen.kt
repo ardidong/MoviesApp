@@ -71,7 +71,7 @@ fun HomeScreen(
         onAddGenre = { homeViewModel.addGenre(it) },
         onRetryGenre = { homeViewModel.getGenreList() },
         onRemoveGenre = { homeViewModel.removeGenre(it) },
-        onSearch = { homeViewModel.getMovie(it) }
+        onSearch = { homeViewModel.searchTitle(it) }
     )
 }
 
