@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.ardidong.domain.genre.GetGenreListUseCase
-import com.ardidong.domain.movie.GetMoviesByGenreUseCase
+import com.ardidong.domain.movie.list.GetMoviesByGenreUseCase
+import com.ardidong.domain.movie.list.SearchMoviesUseCase
 import com.ardidong.moviesapp.ui.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val dispatchGetGenre : GetGenreListUseCase,
-    private val dispatchGetMovies: GetMoviesByGenreUseCase
+    private val dispatchGetMovies: GetMoviesByGenreUseCase,
+    private val dispatchSearchMovie: SearchMoviesUseCase
 ): ViewModel() {
 
     private var _homeState = MutableStateFlow(HomeScreenState.EMPTY)
@@ -25,7 +27,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getGenreList()
-        getMovieByGenre(listOf())
+        getMovie()
     }
 
     fun getGenreList(){
@@ -42,14 +44,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getMovieByGenre(ids: List<Int>){
+    fun getMovie(title: String = "", ids: List<Int> = _homeState.value.selectedGenre.toList()) {
         viewModelScope.launch(Dispatchers.IO){
             updateState {
                 it.copy(
                     movies = emptyFlow()
                 )
             }
-            val data = dispatchGetMovies(ids).cachedIn(viewModelScope)
+            val data = if(title.isBlank())
+                dispatchGetMovies(ids).cachedIn(viewModelScope)
+            else
+                dispatchSearchMovie(title, ids)
             updateState {
                 it.copy(
                     movies = data
@@ -61,7 +66,7 @@ class HomeViewModel @Inject constructor(
     fun addGenre(id: Int){
         updateState {
             val newSet = it.selectedGenre + id
-            getMovieByGenre(newSet.toList())
+            getMovie(ids = newSet.toList())
             it.copy(selectedGenre = newSet )
         }
     }
@@ -69,7 +74,7 @@ class HomeViewModel @Inject constructor(
     fun removeGenre(id: Int){
         updateState {
             val newSet = it.selectedGenre - id
-            getMovieByGenre(newSet.toList())
+            getMovie(ids = newSet.toList())
             it.copy(selectedGenre = newSet )
         }
     }

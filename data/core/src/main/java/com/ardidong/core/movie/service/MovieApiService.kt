@@ -31,4 +31,10 @@ interface MovieApiService {
     suspend fun getMovieVideo(
         @Path(value = "movieId") movieId: Int,
     ): Response<MovieVideoResponse>
+
+    @GET("search/movie?")
+    suspend fun searchMovie(
+        @Query("query") query: String,
+        @Query("page") page: Int = 1
+    ): Response<DiscoverMovieResponse>
 }

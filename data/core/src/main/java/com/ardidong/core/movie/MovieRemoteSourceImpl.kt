@@ -19,6 +19,14 @@ class MovieRemoteSourceImpl @Inject constructor(
         return handleApi { service.getMoviesByGenre(genres = genres.joinToString(","), page = page) }
     }
 
+    override suspend fun searchMovie(
+        query: String,
+        page: Int
+    ): ResultOf<DiscoverMovieResponse> {
+        val service = networkClient.create(MovieApiService::class.java)
+        return handleApi { service.searchMovie(query, page) }
+    }
+
     override suspend fun getMovieDetail(movieId: Int): ResultOf<MovieDetailResponse> {
         val service = networkClient.create(MovieApiService::class.java)
         return handleApi { service.getMovieDetail(movieId) }

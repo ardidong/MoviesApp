@@ -1,4 +1,4 @@
-package com.ardidong.domain.movie
+package com.ardidong.domain.movie.list
 
 import androidx.paging.PagingData
 import com.ardidong.domain.common.ResultOf

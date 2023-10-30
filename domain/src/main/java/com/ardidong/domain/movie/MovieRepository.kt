@@ -10,6 +10,8 @@ import com.ardidong.domain.movie.model.PagedData
 interface MovieRepository {
     suspend fun getMoviesByGenre(genres: List<Int>, page: Int) : ResultOf<PagedData<Movie>>
 
+    suspend fun searchMovie(query: String, genres: List<Int>, page: Int) : ResultOf<PagedData<Movie>>
+
     suspend fun getMovieReview(movieId: Int, page: Int): ResultOf<PagedData<MovieReview>>
 
     suspend fun getMovieDetail(movieId: Int): ResultOf<MovieDetail>

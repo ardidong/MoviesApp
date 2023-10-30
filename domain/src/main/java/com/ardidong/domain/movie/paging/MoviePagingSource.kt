@@ -7,6 +7,7 @@ import com.ardidong.domain.movie.model.Movie
 
 class MoviePagingSource(
     private val repository: MovieRepository,
+    private val query: String = "",
     private val genres : List<Int>
 ) : PagingSource<Int, Movie>() {
     override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
@@ -20,14 +21,25 @@ class MoviePagingSource(
         return try {
             val currentPageNumber = params.key ?: 1
 
-            val movies = repository.getMoviesByGenre(
-                page = currentPageNumber,
-                genres = genres
+            val movies = when{
+                query.isNotBlank() -> repository.searchMovie(
+                    query = query,
+                    genres = genres,
+                    page = currentPageNumber
+                ).fold(
+                    success = {it},
+                    failure = { return LoadResult.Error(RuntimeException()) }
+                )
 
-            ).fold(
-                success = {it},
-                failure = { return LoadResult.Error(RuntimeException()) }
-            )
+                else -> repository.getMoviesByGenre(
+                    page = currentPageNumber,
+                    genres = genres
+
+                ).fold(
+                    success = {it},
+                    failure = { return LoadResult.Error(RuntimeException()) }
+                )
+            }
 
             val nextKey = when {
                 currentPageNumber < movies.totalPages -> currentPageNumber + 1
