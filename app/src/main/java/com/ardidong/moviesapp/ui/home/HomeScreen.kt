@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,7 @@ import com.ardidong.moviesapp.R
 import com.ardidong.moviesapp.ui.UiState
 import com.ardidong.moviesapp.ui.component.ErrorCard
 import com.ardidong.moviesapp.ui.component.MovieAppBar
+import com.ardidong.moviesapp.ui.component.SearchBar
 import kotlinx.coroutines.launch
 
 @Composable
@@ -68,7 +70,8 @@ fun HomeScreen(
         },
         onAddGenre = { homeViewModel.addGenre(it) },
         onRetryGenre = { homeViewModel.getGenreList() },
-        onRemoveGenre = { homeViewModel.removeGenre(it) }
+        onRemoveGenre = { homeViewModel.removeGenre(it) },
+        onSearch = { homeViewModel.searchTitle(it) }
     )
 }
 
@@ -82,6 +85,7 @@ fun HomeScreenContent(
     onAddGenre: (Int) -> Unit,
     onRetryGenre: () -> Unit,
     onRemoveGenre: (Int) -> Unit,
+    onSearch: (String) -> Unit,
 ){
     val movieData = homeScreenState.movies.collectAsLazyPagingItems()
 
@@ -93,6 +97,8 @@ fun HomeScreenContent(
     ) { paddingValues ->
         Box {
             val listState = rememberLazyListState()
+            val focusManager = LocalFocusManager.current
+
             val showScrollTopTopButton by remember {
                 derivedStateOf {
                     listState.firstVisibleItemIndex > 0
@@ -100,8 +106,11 @@ fun HomeScreenContent(
             }
 
             Column(modifier = Modifier.padding(paddingValues)) {
+                SearchBar(
+                    onSearch = { onSearch(it) }
+                )
+
                 GenreTab(
-                    modifier = Modifier.padding(vertical = 8.dp),
                     genreState = homeScreenState.genreState,
                     selectedGenre = homeScreenState.selectedGenre,
                     onAddGenre = { onAddGenre(it) },
@@ -116,7 +125,10 @@ fun HomeScreenContent(
                 ) {
                     items(movieData.itemCount) { index ->
                         movieData[index]?.let { movie ->
-                            MovieItem(movie = movie) { id -> onMovieClicked(id) }
+                            MovieItem(movie = movie) { id ->
+                                focusManager.clearFocus()
+                                onMovieClicked(id)
+                            }
                         }
                     }
 

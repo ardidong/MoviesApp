@@ -24,7 +24,6 @@ class MainActivity : ComponentActivity() {
                 Scaffold {
                     MainNavigation(modifier = Modifier.padding(it), navController = navController)
                 }
-
             }
         }
     }

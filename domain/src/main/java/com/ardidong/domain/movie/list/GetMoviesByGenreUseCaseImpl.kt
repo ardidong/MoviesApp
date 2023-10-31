@@ -1,8 +1,9 @@
-package com.ardidong.domain.movie
+package com.ardidong.domain.movie.list
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.ardidong.domain.movie.MovieRepository
 import com.ardidong.domain.movie.model.Movie
 import com.ardidong.domain.movie.paging.MoviePagingSource
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +17,7 @@ class GetMoviesByGenreUseCaseImpl @Inject constructor(
             config = PagingConfig(PAGE_SIZE),
             initialKey = INITIAL_PAGE_KEY,
             pagingSourceFactory = {
-                MoviePagingSource(repository, genre)
+                MoviePagingSource(repository = repository, genres = genre)
             }
         ).flow
     }

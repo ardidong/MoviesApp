@@ -6,8 +6,10 @@ import com.ardidong.domain.movie.GetMovieReviewUseCase
 import com.ardidong.domain.movie.GetMovieReviewUseCaseImpl
 import com.ardidong.domain.movie.GetMovieVideoUseCase
 import com.ardidong.domain.movie.GetMovieVideoUseCaseImpl
-import com.ardidong.domain.movie.GetMoviesByGenreUseCase
-import com.ardidong.domain.movie.GetMoviesByGenreUseCaseImpl
+import com.ardidong.domain.movie.list.GetMoviesByGenreUseCase
+import com.ardidong.domain.movie.list.GetMoviesByGenreUseCaseImpl
+import com.ardidong.domain.movie.list.SearchMoviesUseCase
+import com.ardidong.domain.movie.list.SearchMoviesUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -35,4 +37,9 @@ abstract class MovieDomainModule {
     abstract fun bindGetMovieVideo(
         useCase: GetMovieVideoUseCaseImpl
     ): GetMovieVideoUseCase
+
+    @Binds
+    abstract fun bindSearchMovie(
+        useCase: SearchMoviesUseCaseImpl
+    ): SearchMoviesUseCase
 }

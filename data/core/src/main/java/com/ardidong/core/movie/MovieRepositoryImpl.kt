@@ -5,6 +5,7 @@ import com.ardidong.core.movie.mapper.MovieMapper
 import com.ardidong.core.movie.mapper.MovieReviewMapper
 import com.ardidong.core.movie.mapper.MovieVideoMapper
 import com.ardidong.domain.common.ResultOf
+import com.ardidong.domain.common.extension.containsAllItems
 import com.ardidong.domain.movie.MovieRepository
 import com.ardidong.domain.movie.model.Movie
 import com.ardidong.domain.movie.model.MovieDetail
@@ -19,11 +20,26 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getMoviesByGenre(genres: List<Int>, page: Int): ResultOf<PagedData<Movie>> {
         val mapper = MovieMapper()
 
-
         return remoteSource.getMoviesByGenres(genres, page).fold(
             success = {
                 val data = mapper.toModel(it)
                 ResultOf.Success(data)
+            },
+            failure = {ResultOf.Failure(it)}
+        )
+    }
+
+    override suspend fun searchMovie(
+        query: String,
+        genres: List<Int>,
+        page: Int
+    ): ResultOf<PagedData<Movie>> {
+        val mapper = MovieMapper()
+
+        return remoteSource.searchMovie(query, page).fold(
+            success = { response ->
+                val data = mapper.toModel(response)
+                ResultOf.Success(data.copy( results = data.results.filter { it.genreIds.containsAllItems(genres) }))
             },
             failure = {ResultOf.Failure(it)}
         )

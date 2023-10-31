@@ -10,6 +10,8 @@ interface MovieRemoteSource {
 
     suspend fun getMoviesByGenres(genres: List<Int>, page: Int): ResultOf<DiscoverMovieResponse>
 
+    suspend fun searchMovie(query: String, page: Int): ResultOf<DiscoverMovieResponse>
+
     suspend fun getMovieDetail(movieId: Int): ResultOf<MovieDetailResponse>
 
     suspend fun getMovieReview(movieId: Int): ResultOf<MovieReviewResponse>
