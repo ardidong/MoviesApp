@@ -14,7 +14,11 @@ ext{
     extra["logging_interceptor_version"] = "4.10.0"
     extra["lifecycle_version"] = "2.6.0"
     extra["paging_version"] = "3.2.1"
+    extra["mockito_version"] = "5.6.0"
+    extra["mockk_version"] = "1.13.8"
 
+    extra["mockk"] = "io.mockk:mockk:${extra["mockk_version"]}"
+    extra["mockito"] = "org.mockito:mockito-core:${extra["mockito_version"]}"
     extra["daggerHilt"] = "com.google.dagger:hilt-android:${extra["hilt_version"]}"
     extra["hiltKapt"] = "com.google.dagger:hilt-compiler:${extra["hilt_version"]}"
     extra["retrofit"] = "com.squareup.retrofit2:retrofit:${extra["retrofit_version"]}"
