@@ -66,6 +66,6 @@ class GenreRemoteSourceTest {
         val result = remoteSource.getGenreList()
 
         assertTrue(result is ResultOf.Failure)
-    }
+     }
 
 }

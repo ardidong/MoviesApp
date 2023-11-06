@@ -16,6 +16,8 @@ ext{
     extra["paging_version"] = "3.2.1"
     extra["mockito_version"] = "5.6.0"
     extra["mockk_version"] = "1.13.8"
+    extra["coroutine_test_version"] = "1.7.3"
+
 
     extra["mockk"] = "io.mockk:mockk:${extra["mockk_version"]}"
     extra["mockito"] = "org.mockito:mockito-core:${extra["mockito_version"]}"
@@ -25,4 +27,6 @@ ext{
     extra["gsonConverter"] = "com.squareup.retrofit2:converter-gson:${extra["retrofit_version"]}"
     extra["loggingInterceptor"] = "com.squareup.okhttp3:logging-interceptor:${extra["logging_interceptor_version"]}"
     extra["paging"] = "androidx.paging:paging-runtime-ktx:${rootProject.extra["paging_version"]}"
+    extra["pagingTest"] = "androidx.paging:paging-testing:${rootProject.extra["paging_version"]}"
+    extra["coroutineTest"] = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutine_test_version"]}"
 }

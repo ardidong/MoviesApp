@@ -53,6 +53,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("${rootProject.extra["mockito"]}")
     testImplementation("${rootProject.extra["mockk"]}")
+    testImplementation("${rootProject.extra["coroutineTest"]}")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
