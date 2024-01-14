@@ -14,11 +14,19 @@ ext{
     extra["logging_interceptor_version"] = "4.10.0"
     extra["lifecycle_version"] = "2.6.0"
     extra["paging_version"] = "3.2.1"
+    extra["mockito_version"] = "5.6.0"
+    extra["mockk_version"] = "1.13.8"
+    extra["coroutine_test_version"] = "1.7.3"
 
+
+    extra["mockk"] = "io.mockk:mockk:${extra["mockk_version"]}"
+    extra["mockito"] = "org.mockito:mockito-core:${extra["mockito_version"]}"
     extra["daggerHilt"] = "com.google.dagger:hilt-android:${extra["hilt_version"]}"
     extra["hiltKapt"] = "com.google.dagger:hilt-compiler:${extra["hilt_version"]}"
     extra["retrofit"] = "com.squareup.retrofit2:retrofit:${extra["retrofit_version"]}"
     extra["gsonConverter"] = "com.squareup.retrofit2:converter-gson:${extra["retrofit_version"]}"
     extra["loggingInterceptor"] = "com.squareup.okhttp3:logging-interceptor:${extra["logging_interceptor_version"]}"
     extra["paging"] = "androidx.paging:paging-runtime-ktx:${rootProject.extra["paging_version"]}"
+    extra["pagingTest"] = "androidx.paging:paging-testing:${rootProject.extra["paging_version"]}"
+    extra["coroutineTest"] = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutine_test_version"]}"
 }
